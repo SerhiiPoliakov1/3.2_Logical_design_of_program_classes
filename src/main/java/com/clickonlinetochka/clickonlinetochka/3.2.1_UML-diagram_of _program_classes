@@ -1,0 +1,917 @@
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Basked {
+    private Map<Product,Long> productInBasked = new HashMap();
+
+    public void addProductInbasked(Product product, Long count ){
+        productInBasked.put(product,count);
+    }
+    public void deleteProductFromBasked(Product product){
+        productInBasked.remove(product);
+    }
+    public void changeCountProduct(Product product ,Long newCount){
+        productInBasked.replace(product,newCount);
+    }
+    public void clearBasked(){
+        productInBasked.clear();
+    }
+
+    public Map<Product, Long> getProductInBasked() {
+        return productInBasked;
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Objects;
+
+@Document(collection = "customers")
+public class Customer {
+    @Id
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String email;
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
+
+    public Customer(String firstName, String lastName, String email, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id) && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email) && Objects.equals(phone, customer.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, phone);
+    }
+}
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+public class CustomerUserDetail implements UserDetails {
+
+    private User user;
+    private static final long serialVersionUID = 1L;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+}
+package com.clickonlinetochka.clickonlinetochka.model;
+
+public class EmloyeeDto {
+    private String firstName;
+    private String lastName;
+    private Double salary;
+    private String email;
+    private String username;
+    private String password;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+import java.util.Objects;
+
+@Document(collection = "employes")
+public class Employee {
+
+    @Id
+    private String id;
+    private String firstName;
+    private String lastName;
+    private Double salary;
+    @Indexed
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Employee(String firstName, String lastName, Double salary, List<Order> ordersForProcessing) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.ordersForProcessing = ordersForProcessing;
+    }
+
+    private List<Order> ordersForProcessing;
+
+    public Employee() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public List<Order> getOrdersForProcessing() {
+        return ordersForProcessing;
+    }
+
+    public void setOrdersForProcessing(List<Order> ordersForProcessing) {
+        this.ordersForProcessing = ordersForProcessing;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(id, employee.id) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(salary, employee.salary) && Objects.equals(ordersForProcessing, employee.ordersForProcessing);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, salary, ordersForProcessing);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", salary=" + salary +
+                ", ordersForProcessing=" + ordersForProcessing +
+                '}';
+    }
+}
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.bson.codecs.jsr310.LocalDateTimeCodec;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Document(collection = "orders")
+public class Order {
+    @Id
+    private String id;
+    @Indexed
+    private Map<Product,Long> productsInOrder;
+    private Double totalPrice;
+    private Customer customer;
+    private LocalDateTime createDateTime;
+    private Status status;
+
+    public  Order(){
+        createDateTime = LocalDateTime.now();
+        status = Status.NEW;
+    }
+    public Order(Map<Product,Long> productsInOrder, Double totalPrice, Customer customer, LocalDateTime createDateTime, Status status) {
+        this.productsInOrder = productsInOrder;
+        this.totalPrice = totalPrice;
+        this.customer = customer;
+        this.createDateTime = createDateTime;
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Map<Product,Long> getProductsInOrder() {
+        return productsInOrder;
+    }
+
+    public void setProductsInOrder(Map<Product,Long> productsInOrder) {
+        this.productsInOrder = productsInOrder;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) && Objects.equals(productsInOrder, order.productsInOrder) && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(customer, order.customer) && Objects.equals(createDateTime, order.createDateTime) && status == order.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productsInOrder, totalPrice, customer, createDateTime, status);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", productsInOrder=" + productsInOrder +
+                ", totalPrice=" + totalPrice +
+                ", customer=" + customer +
+                ", createDateTime=" + createDateTime +
+                ", status=" + status +
+                '}';
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Objects;
+
+@Document(collection = "products")
+public class Product {
+    @Id
+    private String id;
+    private String name;
+    private Double price;
+    private String description;
+
+    public  Product(){
+
+    }
+    public Product(String name, Double price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+public class ProductDto {
+    private String id;
+    private String name;
+    private Double price;
+    private String description;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+public enum Status {
+    NEW,
+    PROCESSING,
+    COMPLETE,
+    CANCEL
+}
+
+package com.clickonlinetochka.clickonlinetochka.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Objects;
+
+
+@Document(collection = "users")
+public class User {
+    @Id
+    private String id;
+    private String email;
+    private String username;
+    private String password;
+
+
+
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password =password;
+
+
+    }
+
+    public User() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, username, password);
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.controller;
+
+import com.clickonlinetochka.clickonlinetochka.model.User;
+import com.clickonlinetochka.clickonlinetochka.model.UserDto;
+import com.clickonlinetochka.clickonlinetochka.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+@RestController
+public class AdminControll {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/registration")
+    public User addUser(@RequestBody UserDto user){
+        UUID uuid =  UUID.randomUUID();
+        User userForAdding = new User();
+        userForAdding.setId(uuid.toString());
+        userForAdding.setPassword(passwordEncoder.encode(user.getPassword()));
+        userForAdding.setUsername(user.getUsername());
+        userForAdding.setEmail(user.getEmail());
+        userRepository.save(userForAdding);
+        return  userForAdding;
+    }
+
+    @GetMapping("/check")
+    public String check(){
+        return "Success auth";
+    }
+
+}
+
+package com.clickonlinetochka.clickonlinetochka.controller;
+
+import com.clickonlinetochka.clickonlinetochka.model.EmloyeeDto;
+import com.clickonlinetochka.clickonlinetochka.model.Employee;
+import com.clickonlinetochka.clickonlinetochka.model.User;
+import com.clickonlinetochka.clickonlinetochka.repository.EmployeeRepository;
+import com.clickonlinetochka.clickonlinetochka.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class EmployeeController {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @PostMapping("/employee/registration")
+    public User registration(@RequestBody EmloyeeDto emloyeeDto){
+        User user = new User();
+        user.setUsername(emloyeeDto.getUsername());
+        user.setPassword(passwordEncoder.encode(emloyeeDto.getPassword()));
+        user.setEmail(emloyeeDto.getEmail());
+
+        Employee newEmployee = new Employee();
+        newEmployee.setFirstName(emloyeeDto.getFirstName());
+        newEmployee.setLastName(emloyeeDto.getLastName());
+        newEmployee.setSalary(emloyeeDto.getSalary());
+        newEmployee.setUser(user);
+
+        userRepository.save(user);
+        employeeRepository.save(newEmployee);
+        return user;
+
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.controller;
+
+import com.clickonlinetochka.clickonlinetochka.model.Product;
+import com.clickonlinetochka.clickonlinetochka.model.ProductDto;
+import com.clickonlinetochka.clickonlinetochka.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @GetMapping
+    public List<Product> getListProduct() {
+        return productRepository.findAll();
+    }
+
+    @PostMapping("/add")
+    public String addProduct(@RequestBody ProductDto productDto) {
+        UUID uuid = UUID.randomUUID();
+        Product product = new Product();
+        product.setId(uuid.toString());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setName(productDto.getName());
+
+        productRepository.save(product);
+        return uuid.toString();
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteProduct(@RequestParam String productId) {
+        return productRepository.deleteById(productId).getId();
+    }
+}
+
+package com.clickonlinetochka.clickonlinetochka.controller;
+
+
+import com.clickonlinetochka.clickonlinetochka.model.*;
+import com.clickonlinetochka.clickonlinetochka.repository.OrderRepository;
+import com.clickonlinetochka.clickonlinetochka.repository.ProductRepository;
+import com.clickonlinetochka.clickonlinetochka.repository.UserRepository;
+import com.clickonlinetochka.clickonlinetochka.service.CustomerService;
+import com.clickonlinetochka.clickonlinetochka.service.MongoUserDetailsService;
+import com.clickonlinetochka.clickonlinetochka.service.SecurityService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+
+@RestController
+public class ShopController {
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private MongoUserDetailsService userDetailsService;
+    @Autowired
+    private OrderRepository orderRepository;
+    private Basked basked = new Basked();
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CustomerService customerService;
+
+    @PostMapping("/basket/add")
+    public String addItemInBasket(@RequestParam String productId, @RequestParam Long count) throws Exception {
+        Product product = productRepository.findById(productId);
+        if (product != null) {
+            basked.addProductInbasked(product, count);
+        } else throw new Exception("Product with id " + productId + " not found");
+        return productId;
+    }
+
+    @PostMapping("/basket/edit")
+    public String editCountItemInBasket(String productId, Long count) throws Exception {
+        Product product = productRepository.findAll().stream().filter(product1 -> product1.getId().equals(product1)).findFirst().get();
+        if (product != null) {
+            basked.addProductInbasked(product, count);
+        } else throw new Exception("Product with id " + productId + " not found");
+        basked.getProductInBasked().replace(product, count);
+        return product.getId();
+    }
+
+    @PostMapping("/order/confirmation")
+    public String addOrder(@RequestParam(required = true) String username) throws Exception {
+        if (basked.getProductInBasked().isEmpty()) {
+            throw new Exception("basked is empty");
+        }
+        Order order = new Order();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("Not found user with username " + username);
+        }
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Customer customer = customerService.findCustomerByUser(user);
+        order.setCustomer(customer);
+        double totalSum = basked.getProductInBasked().keySet().stream().mapToDouble(Product::getPrice).sum();
+        order.setTotalPrice(totalSum);
+        order.setProductsInOrder(basked.getProductInBasked());
+        UUID uuid = UUID.randomUUID();
+        order.setId(uuid.toString());
+        orderRepository.save(order);
+        return uuid.toString();
+    }
+
+}
+package com.clickonlinetochka.clickonlinetochka.repository;
+
+import com.clickonlinetochka.clickonlinetochka.model.Customer;
+import com.clickonlinetochka.clickonlinetochka.model.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CustomerRepository extends MongoRepository<Customer,Long> {
+    Customer findByUser(User user);
+}
+
+package com.clickonlinetochka.clickonlinetochka.repository;
+
+import com.clickonlinetochka.clickonlinetochka.model.Employee;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface EmployeeRepository extends MongoRepository<Employee,Long> {
+}
+
+package com.clickonlinetochka.clickonlinetochka.repository;
+
+import com.clickonlinetochka.clickonlinetochka.model.Order;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface OrderRepository extends MongoRepository<Order,Long> {
+}
+
+package com.clickonlinetochka.clickonlinetochka.repository;
+
+import com.clickonlinetochka.clickonlinetochka.model.Product;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductRepository extends MongoRepository<Product,Long> {
+    Product findById(String id);
+    Product deleteById(String id);
+}
+
+package com.clickonlinetochka.clickonlinetochka.repository;
+
+import com.clickonlinetochka.clickonlinetochka.model.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends MongoRepository<User, String> {
+    User findByUsername(String username);
+    User findByEmail(String email);
+}
